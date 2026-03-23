@@ -745,18 +745,9 @@ var pd = {
           },
           function () {
             pd.task.info.errors++;
-            if (
-              confirm(
-                "Error getting " +
-                  pd.task.paths.sections[0] +
-                  " page. Would you like to retry?"
-              )
-            ) {
+            setTimeout(function () {
               pd.actions.page.handle();
-            } else {
-              pd.actions.page.shift();
-              pd.actions.page.next();
-            }
+            }, 15000);
           }
         );
       },
@@ -890,18 +881,9 @@ var pd = {
             },
             function () {
               pd.task.info.errors++;
-              if (
-                confirm(
-                  "Error deleting " +
-                    (item.kind == "t3" ? "post" : "comment") +
-                    ", would you like to retry?"
-                )
-              ) {
+              setTimeout(function () {
                 pd.actions.children.handleSingle();
-              } else {
-                pd.actions.children.finishItem();
-                pd.actions.children.handleGroup();
-              }
+              }, 15000);
             }
           );
         } else {
@@ -934,16 +916,9 @@ var pd = {
             },
             function () {
               pd.task.info.errors++;
-              if (
-                !confirm(
-                  "Error editing " +
-                    (item.kind == "t3" ? "post" : "comment") +
-                    ", would you like to retry?"
-                )
-              ) {
-                item.pdEdited = true;
-              }
-              pd.actions.children.handleSingle();
+              setTimeout(function () {
+                pd.actions.children.handleSingle();
+              }, 15000);
             }
           );
         } else {
