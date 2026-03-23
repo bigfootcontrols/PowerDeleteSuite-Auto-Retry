@@ -756,7 +756,7 @@ var pd = {
               }, delay);
             } else {
               pd.task.pageRetryIndex = 0;
-              if (confirm("I have tried loading this page several times. Do you want to try again?")) {
+              if (confirm("Loading this page has been attempted several times. Continue trying?")) {
                 pd.actions.page.handle();
               } else {
                 pd.ui.done();
@@ -903,7 +903,7 @@ var pd = {
                 }, pd.retryDelays[retryIndex]);
               } else {
                 item.pdDeleteRetryIndex = 0;
-                if (confirm("I have tried deleting this post several times. Do you want to try again?")) {
+                if (confirm("Deletion on this item has been attempted several times. Continue trying?")) {
                   pd.actions.children.handleSingle();
                 } else {
                   pd.actions.children.finishItem();
@@ -950,7 +950,7 @@ var pd = {
                 }, pd.retryDelays[retryIndex]);
               } else {
                 item.pdEditRetryIndex = 0;
-                if (confirm("I have tried editing this post several times. Do you want to try again?")) {
+                if (confirm("Editing on this item has been attempted several times. Continue trying?")) {
                   pd.actions.children.handleSingle();
                 } else {
                   pd.actions.children.finishItem();
