@@ -211,7 +211,7 @@ var pd = {
 "I like creating video content.",
 "I enjoy participating in hackathons."
   ],
-  retryDelays: [15000, 45000, 180000, 600000],
+  retryDelays: [10000, 10000, 10000, 10000, 10000, 45000, 45000, 45000, 180000, 180000, 600000],
   init: function () {
     pd.checks.versions();
     if (window.pd_processing !== true) {
@@ -756,11 +756,7 @@ var pd = {
               }, delay);
             } else {
               pd.task.pageRetryIndex = 0;
-              if (confirm("Loading this page has been attempted several times. Continue trying?")) {
-                pd.actions.page.handle();
-              } else {
-                pd.ui.done();
-              }
+              pd.ui.done();
             }
           }
         );
@@ -903,12 +899,8 @@ var pd = {
                 }, pd.retryDelays[retryIndex]);
               } else {
                 item.pdDeleteRetryIndex = 0;
-                if (confirm("Deletion on this item has been attempted several times. Continue trying?")) {
-                  pd.actions.children.handleSingle();
-                } else {
-                  pd.actions.children.finishItem();
-                  pd.actions.children.handleGroup();
-                }
+                pd.actions.children.finishItem();
+                pd.actions.children.handleGroup();
               }
             }
           );
@@ -950,12 +942,8 @@ var pd = {
                 }, pd.retryDelays[retryIndex]);
               } else {
                 item.pdEditRetryIndex = 0;
-                if (confirm("Editing on this item has been attempted several times. Continue trying?")) {
-                  pd.actions.children.handleSingle();
-                } else {
-                  pd.actions.children.finishItem();
-                  pd.actions.children.handleGroup();
-                }
+                pd.actions.children.finishItem();
+                pd.actions.children.handleGroup();
               }
             }
           );
