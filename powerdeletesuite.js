@@ -211,6 +211,7 @@ var pd = {
 "I like creating video content.",
 "I enjoy participating in hackathons."
   ],
+  retryDelays: [15000, 45000, 180000, 600000],
   init: function () {
     pd.checks.versions();
     if (window.pd_processing !== true) {
@@ -719,6 +720,7 @@ var pd = {
             if (resp.data) {
               var children = resp.data.children;
               pd.task.info.donePages++;
+              pd.task.pageRetryIndex = 0;
               if (children.length > 0) {
                 pd.task.info.doneItems = 0;
                 pd.task.info.numItems = children.length;
@@ -745,9 +747,21 @@ var pd = {
           },
           function () {
             pd.task.info.errors++;
-            setTimeout(function () {
-              pd.actions.page.handle();
-            }, 15000);
+            pd.task.pageRetryIndex = pd.task.pageRetryIndex || 0;
+            if (pd.task.pageRetryIndex < pd.retryDelays.length) {
+              var delay = pd.retryDelays[pd.task.pageRetryIndex];
+              pd.task.pageRetryIndex++;
+              setTimeout(function () {
+                pd.actions.page.handle();
+              }, delay);
+            } else {
+              pd.task.pageRetryIndex = 0;
+              if (confirm("Loading this page has been attempted several times. Continue trying?")) {
+                pd.actions.page.handle();
+              } else {
+                pd.ui.done();
+              }
+            }
           }
         );
       },
@@ -881,9 +895,21 @@ var pd = {
             },
             function () {
               pd.task.info.errors++;
-              setTimeout(function () {
-                pd.actions.children.handleSingle();
-              }, 15000);
+              var retryIndex = item.pdDeleteRetryIndex || 0;
+              if (retryIndex < pd.retryDelays.length) {
+                item.pdDeleteRetryIndex = retryIndex + 1;
+                setTimeout(function () {
+                  pd.actions.children.handleSingle();
+                }, pd.retryDelays[retryIndex]);
+              } else {
+                item.pdDeleteRetryIndex = 0;
+                if (confirm("Deletion on this item has been attempted several times. Continue trying?")) {
+                  pd.actions.children.handleSingle();
+                } else {
+                  pd.actions.children.finishItem();
+                  pd.actions.children.handleGroup();
+                }
+              }
             }
           );
         } else {
@@ -916,9 +942,21 @@ var pd = {
             },
             function () {
               pd.task.info.errors++;
-              setTimeout(function () {
-                pd.actions.children.handleSingle();
-              }, 15000);
+              var retryIndex = item.pdEditRetryIndex || 0;
+              if (retryIndex < pd.retryDelays.length) {
+                item.pdEditRetryIndex = retryIndex + 1;
+                setTimeout(function () {
+                  pd.actions.children.handleSingle();
+                }, pd.retryDelays[retryIndex]);
+              } else {
+                item.pdEditRetryIndex = 0;
+                if (confirm("Editing on this item has been attempted several times. Continue trying?")) {
+                  pd.actions.children.handleSingle();
+                } else {
+                  pd.actions.children.finishItem();
+                  pd.actions.children.handleGroup();
+                }
+              }
             }
           );
         } else {
